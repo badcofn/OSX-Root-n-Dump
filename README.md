@@ -40,5 +40,6 @@ The following 5 files will be created:
 /Library/.hidden/*.sh 
 
 /Library/.hidden/keychaindump
+
 /Library/.hidden/$user.login.keychain.txt
 
