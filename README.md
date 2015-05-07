@@ -30,6 +30,7 @@ You can find the standalone duckscript here: https://github.com/hak5darren/USB-R
 Cleanup:
 
 The following 5 files will be created:
+
 /Library/LaunchDaemons/com.apples.services.plist
 
 /Library/LaunchDaemons/com.apples1.services.plist
