@@ -1,5 +1,5 @@
 REM BadCoFN
-REM OSX root shell and Keychain dump
+REM OSX persistant root shell and Keychain dump
 REM Boot mac into single user mode with Command+S then insert USBRubberDucky at root#
 REM
 REM Uses slightly Modified scripts from Patrick Mosca and Isaiah Turner
